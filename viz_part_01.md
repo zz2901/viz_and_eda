@@ -187,3 +187,72 @@ weather_df %>%
     ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
 
 ![](viz_part_01_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+## univariate plots
+
+histograms, barplots, boxplots, violins
+
+``` r
+weather_df %>% 
+  ggplot(aes(x=tmax,fill=name))+
+  geom_histogram()+
+  facet_grid(.~name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+more options
+
+``` r
+weather_df %>% 
+  ggplot(aes(x=tmax,fill=name,color=name)) +
+  geom_density(alpha=.1)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+boxplots
+
+``` r
+weather_df %>% 
+  ggplot(aes(x=name,y=tmax,fill=name))+
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+violin
+
+``` r
+weather_df %>% 
+  ggplot(aes(x=name,y=tmax,fill=name))+
+  geom_violin(alpha=.3)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+OR
+
+ridges plot for more groups comparison, same as violin
+
+``` r
+weather_df %>% 
+  ggplot(aes(x=tmax,y=name))+
+  geom_density_ridges()
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](viz_part_01_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
