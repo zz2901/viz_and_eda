@@ -1,0 +1,118 @@
+---
+title: "viz_part_01"
+output: github_document
+---
+
+
+```{r, echo = FALSE,message=FALSE}
+library(tidyverse)
+library(ggridges)
+```
+
+import weather dataset
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+## basic scatterplot
+
+We’ll use the weather_df data throughout, so we’ll move straight into defining aesthetic mappings. To create a basic scatterplot, we need to map variables to the X and Y coordinate aesthetics:
+
+```{r}
+ggplot(weather_df, aes(x = tmin, y = tmax))+
+  geom_point()
+
+```
+
+let's make the same scatterplot, but different
+
+```{r}
+weather_df %>% 
+  drop_na() %>% 
+  filter(name=="CentralPark_NY") %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point()
+```
+
+let's keep making the same plot but different
+
+```{r}
+weather_scatterplot = 
+  weather_df %>% 
+  drop_na() %>% 
+  ggplot(aes(x=tmin,y=tmax))
+
+weather_scatterplot + 
+  geom_point()
+```
+
+##let's fancy this up
+
+```{r}
+
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax,color=name)) +
+  geom_point()
+
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax)) +
+  geom_point(aes(color=name))+
+  geom_smooth()
+
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax,color=name)) +
+  geom_point(alpha=.3)+ #alpha transparancy 0~1
+  geom_smooth(se=FALSE)
+
+
+```
+
+maybe make seperate panels
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax,color=name)) +
+  geom_point(alpha=.3)+ #alpha transparancy 0~1
+  geom_smooth(se=FALSE)+
+  facet_grid(. ~ name) #row ~ column
+
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax,color=name)) +
+  geom_point(alpha=.3)+ #alpha transparancy 0~1
+  geom_smooth(se=FALSE)+
+  facet_grid(name ~ .) #row ~ column, . is a placeholder
+```
+
+`tmax` vs `tmin` is boring. spicing it up
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x=date,y=tmax,color=name))+
+  geom_point(aes(size=prcp),alpha=.3)+
+  geom_smooth(se=FALSE)+
+  facet_grid(.~name)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))#rotate x axis labels 
+```
+
+## some quick stuff
+```{r}
+weather_df %>% 
+  ggplot(aes(x=tmin,y=tmax))+
+  geom_hex()
+```
+
