@@ -1,10 +1,16 @@
 ---
 title: "viz_part_01"
+author: "Jeff Goldsmith"
 output: github_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-```{r, echo = FALSE,message=FALSE}
+## Let's import data
+
+```{r}
 library(tidyverse)
 library(ggridges)
 ```
